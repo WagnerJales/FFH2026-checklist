@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Festival de Flores de Holambra - Gestão de Projeto</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            max-height: 100vh;
+        }
+
+        .header {
+            background: #1a5c8a;
+            color: white;
+            padding: 20px;
+            border-bottom: 3px solid #0d3a52;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            margin-bottom: 3px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0;
+            background: #f0f0f0;
+            border-bottom: 1px solid #ddd;
+            flex-shrink: 0;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-btn.active {
+            color: #1a5c8a;
+            border-bottom-color: #1a5c8a;
+            background: white;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 6px;
+            padding: 10px 12px;
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+
+        .tool-btn {
+            flex: 1;
+            min-width: 96px;
+            padding: 9px 6px;
+            border: 1px solid #1a5c8a;
+            border-radius: 6px;
+            background: white;
+            color: #1a5c8a;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .tool-btn:hover {
+            background: #1a5c8a;
+            color: white;
+        }
+
+        .tool-btn.primary {
+            background: #1a5c8a;
+            color: white;
+        }
+
+        .tool-btn.primary:hover {
+            background: #0d3a52;
+        }
+
+        .aviso {
+            flex-basis: 100%;
+            font-size: 11px;
+            color: #2e7d32;
+            line-height: 1.4;
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .dashboard-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+            border-color: #1a5c8a;
+        }
+
+        .card-title {
+            font-weight: 700;
+            color: #1a5c8a;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .card-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 8px;
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+
+        .stat-number {
+            font-weight: 700;
+            font-size: 16px;
+            color: #1a5c8a;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: #666;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        .card-progress {
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .card-progress-bar {
+            height: 100%;
+            background: #4caf50;
+            transition: width 0.3s ease;
+        }
+
+        .progress-card {
+            background: linear-gradient(135deg, #1a5c8a 0%, #0d3a52 100%);
+            color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .progress-card-number {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .progress-card-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-card-fill {
+            height: 100%;
+            background: #4caf50;
+            transition: width 0.3s ease;
+        }
+
+        .progress-card-label {
+            font-size: 11px;
+            opacity: 0.9;
+        }
+
+        .item {
+            padding: 14px;
+            margin-bottom: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: #fafafa;
+        }
+
+        .item.completed {
+            background: #e8f5e9;
+            border-color: #4caf50;
+        }
+
+        .item-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .item-checkbox {
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            cursor: pointer;
+            accent-color: #1a5c8a;
+            flex-shrink: 0;
+        }
+
+        .item-content {
+            flex: 1;
+        }
+
+        .item-number {
+            font-weight: 700;
+            color: #1a5c8a;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .item-description {
+            font-size: 13px;
+            color: #333;
+            margin-top: 4px;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .item.completed .item-description {
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        .item-category {
+            display: inline-block;
+            background: #1a5c8a;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 700;
+            margin-top: 6px;
+        }
+
+        .stats {
+            padding: 10px 12px;
+            background: #f0f0f0;
+            border-top: 1px solid #ddd;
+            flex-shrink: 0;
+            font-size: 11px;
+            color: #666;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 3px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            margin-top: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #1a5c8a;
+            transition: width 0.3s ease;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 30px 20px;
+            color: #999;
+            font-size: 12px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        #editItemModal {
+            z-index: 2000;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            border-radius: 12px 12px 0 0;
+            padding: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .modal-header h2 {
+            font-size: 16px;
+            color: #1a5c8a;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .category-modal-items {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .category-item-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            border-left: 3px solid #1a5c8a;
+        }
+
+        .category-item-row.completed {
+            background: #e8f5e9;
+            border-left-color: #4caf50;
+        }
+
+        .category-item-checkbox {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: #1a5c8a;
+        }
+
+        .category-item-text {
+            flex: 1;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .category-item-row.completed .category-item-text {
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        .modal-field {
+            margin-bottom: 16px;
+        }
+
+        .modal-label {
+            display: block;
+            font-weight: 700;
+            color: #1a5c8a;
+            font-size: 11px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .modal-input,
+        .modal-textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+        }
+
+        .modal-input:focus,
+        .modal-textarea:focus {
+            outline: none;
+            border-color: #1a5c8a;
+            box-shadow: 0 0 0 2px rgba(26, 92, 138, 0.1);
+        }
+
+        .modal-textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .modal-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .modal-save,
+        .modal-cancel {
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .modal-save {
+            background: #1a5c8a;
+            color: white;
+        }
+
+        .modal-save:hover {
+            background: #0d3a52;
+        }
+
+        .modal-cancel {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .modal-cancel:hover {
+            background: #d0d0d0;
+        }
+
+        .item-description-full {
+            font-size: 14px;
+            color: #333;
+            margin-top: 8px;
+            padding: 8px;
+            background: #f5f5f5;
+            border-radius: 4px;
+            border-left: 3px solid #1a5c8a;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                border-radius: 0;
+            }
+
+            .header h1 {
+                font-size: 18px;
+            }
+
+            .tab-btn {
+                font-size: 11px;
+            }
+
+            .progress-card-number {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Festival de Flores de Holambra</h1>
+            <p>Gestão de Projeto 2026</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="plano">Plano de Ação</button>
+            <button class="tab-btn" data-tab="checklist">Checklist</button>
+        </div>
+
+        <div class="toolbar">
+            <button class="tool-btn primary" onclick="salvarNoArquivo()">Salvar no arquivo</button>
+            <button class="tool-btn" onclick="exportarCSV('plano')">CSV Plano</button>
+            <button class="tool-btn" onclick="exportarCSV('checklist')">CSV Checklist</button>
+            <div class="aviso" id="aviso"></div>
+        </div>
+
+        <div class="content">
+            <div class="tab-content active" id="plano"><div id="planoContent"></div></div>
+            <div class="tab-content" id="checklist"><div id="checklistContent"></div></div>
+        </div>
+
+        <div class="stats">
+            <div id="statsText">Carregando...</div>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%"></div></div>
+        </div>
+    </div>
+
+    <div class="modal" id="editItemModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="editModalTitle">Editar Item</h2>
+                <button class="modal-close" onclick="closeEditModal()">&times;</button>
+            </div>
+            <div id="editModalContent"></div>
+            <div class="modal-buttons">
+                <button class="modal-cancel" onclick="closeEditModal()">Cancelar</button>
+                <button class="modal-save" onclick="saveEditItem()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="categoryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="categoryModalTitle">Categoria</h2>
+                <button class="modal-close" onclick="closeCategoryModal()">&times;</button>
+            </div>
+            <div class="category-modal-items" id="categoryModalItems"></div>
+        </div>
+    </div>
+
+    <script type="application/json" id="estadoSalvo">null</script>
+    <script>
+const data={checklist:[{item:"1",categoria:"NUCLEO",descricao:"Cabo elétrico para ALIMENTAÇÂO de energia (da fonte até o quadro)",observacoes:""},{item:"2",categoria:"NUCLEO",descricao:"Cabo elétrico para DISTRIBUIÇÃO de energia (do quadro para os pontos)",observacoes:""},{item:"3",categoria:"NUCLEO",descricao:"Aste/tubo para ligar alimentação com o quadro",observacoes:""},{item:"4",categoria:"NUCLEO",descricao:"Quadro de Energia (Caixa + Djuntores)",observacoes:""},{item:"5",categoria:"NUCLEO",descricao:"02 Refletores de 20w",observacoes:""},{item:"6",categoria:"NUCLEO",descricao:"01 lâmpada de 105w",observacoes:""},{item:"7",categoria:"NUCLEO",descricao:"01 lâmpada de 90w",observacoes:""},{item:"8",categoria:"NUCLEO",descricao:"03 lâmpadas de 65w",observacoes:""},{item:"9",categoria:"NUCLEO",descricao:"02 lâmpadas de 12w",observacoes:""},{item:"10",categoria:"NUCLEO",descricao:"01 lâmpada de 7w",observacoes:""},{item:"11",categoria:"NUCLEO",descricao:"Interruptores",observacoes:""},{item:"12",categoria:"NUCLEO",descricao:"Tomadas",observacoes:""},{item:"13",categoria:"NUCLEO",descricao:"Bebedouro ( Importante, comunicar a organ em exercicio)",observacoes:"Núcleo"},{item:"14",categoria:"NUCLEO",descricao:"Garrafões para àgua mineral (3) ( Importante, comunicar a organ em exercicio)",observacoes:"Núcleo"},{item:"16",categoria:"NUCLEO",descricao:"Tablados",observacoes:"Existem 4 disponíveis no depósito em bom estado de uso"},{item:"17",categoria:"NUCLEO",descricao:"Escada",observacoes:"Escada de 2 lances + 1 escada pequena"},{item:"18",categoria:"NUCLEO",descricao:"Caixas para recebimento de dinheiro (São 2 amarelo)",observacoes:""},{item:"19",categoria:"NUCLEO",descricao:"Lixeiras incluindo as grandes do Novo encanto",observacoes:"08 und. Disponíveis no depósito"},{item:"20",categoria:"NUCLEO",descricao:"Pedestal e Corrente Zebrada",observacoes:"11 Peças - 08 completas"},{item:"21",categoria:"NUCLEO",descricao:"Faixa Banner de divulgação do Festival",observacoes:""},{item:"22",categoria:"NUCLEO",descricao:"Placas indicativas, entrada, saída, cartões",observacoes:"05 placas disponíveis no depósito"},{item:"23",categoria:"NUCLEO",descricao:"Cestos de mão para compra",observacoes:"06 disponíveis no depósito"},{item:"24",categoria:"NUCLEO",descricao:"Ferramentas para instalação (alicates, fita isolante)",observacoes:"02 alicates amarelos no malão"},{item:"25",categoria:"NUCLEO",descricao:"Fio e Arame para uso diversos",observacoes:"1 kg. De Arame disponível"},{item:"26",categoria:"NUCLEO",descricao:"Calculadora com pilhas",observacoes:"Não foi necessário"},{item:"27",categoria:"NUCLEO",descricao:"Compostos",observacoes:""},{item:"28",categoria:"COMPRA",descricao:"Copo descartável - 11pct com 100und",observacoes:"Material para 11 dias"},{item:"29",categoria:"COMPRA",descricao:"Vassouras - 5 Und",observacoes:""},{item:"30",categoria:"COMPRA",descricao:"Pá de lixo - 4 Und",observacoes:""},{item:"31",categoria:"COMPRA",descricao:"Rodos - 3 grandes e 3 pequenos",observacoes:"Caso período chuvoso"},{item:"32",categoria:"COMPRA",descricao:"Alcool - 2 Und",observacoes:"De preferência sem aroma"},{item:"33",categoria:"COMPRA",descricao:"Desinfetante - 4 Litros",observacoes:""},{item:"34",categoria:"COMPRA",descricao:"Detergente - 1 und",observacoes:""},{item:"35",categoria:"COMPRA",descricao:"Saco de lixo - 15 Litros",observacoes:"20 und para banheiros"},{item:"36",categoria:"COMPRA",descricao:"Saco de lixo - 50 Litros",observacoes:"50 Und para Lixeiras"},{item:"37",categoria:"COMPRA",descricao:"Saco de lixo - 100 Litros",observacoes:"25 Und para Lixeiras"},{item:"38",categoria:"COMPRA",descricao:"Saco de lixo - 200 Litros",observacoes:"25 Und para Lixeiras"},{item:"39",categoria:"COMPRA",descricao:"Sacolas para embalagem de plantas",observacoes:""},{item:"40",categoria:"COMPRA",descricao:"Papel Higiênico - 24 Und",observacoes:""},{item:"41",categoria:"COMPRA",descricao:"Pano de Limpeza mesa - 3 Und",observacoes:""},{item:"42",categoria:"COMPRA",descricao:"Pano de Chão - 2 Und",observacoes:""},{item:"43",categoria:"COMPRA",descricao:"Sabão em pó - 2 Und de 500",observacoes:""},{item:"44",categoria:"COMPRA",descricao:"Água sanitária - 3 Und",observacoes:""},{item:"45",categoria:"COMPRA",descricao:"Canetas",observacoes:""},{item:"46",categoria:"COMPRA",descricao:"Liga 1 cx",observacoes:""},{item:"47",categoria:"COMPRA",descricao:"Fita Gomada 2 und",observacoes:""},{item:"48",categoria:"COMPRA",descricao:"Blocos de Vales",observacoes:""},{item:"49",categoria:"COMPRA",descricao:"Blocos de Recibos",observacoes:""},{item:"50",categoria:"COMPRA",descricao:"Grampeadores",observacoes:""},{item:"51",categoria:"COMPRA",descricao:"Grampos",observacoes:""},{item:"52",categoria:"COMPRA",descricao:"Tesouras",observacoes:"01 disponível dentro do malão"}],planoAcao:[{item:"1",categoria:"DOCUMENTAÇÃO",descricao:"Layout Feito?",quem:"Wagner",onde:"",quando:"",status:""},{item:"2",categoria:"DOCUMENTAÇÃO",descricao:"Liberação Dep Patrimonio do Estado?",quem:"Wagner",onde:"",quando:"",status:""},{item:"3",categoria:"DOCUMENTAÇÃO",descricao:"Corpo de Bombeiros?",quem:"Joaquim",onde:"",quando:"",status:""},{item:"4",categoria:"DOCUMENTAÇÃO",descricao:"Blitz Urbana?",quem:"Joaquim",onde:"",quando:"",status:""},{item:"5",categoria:"DOCUMENTAÇÃO",descricao:"ART/RRT ok?",quem:"Wagner",onde:"",quando:"",status:""},{item:"6",categoria:"DOCUMENTAÇÃO",descricao:"Documentação impressa para entregar ao GO?",quem:"",onde:"",quando:"",status:""},{item:"7",categoria:"COMUNICAÇÃO",descricao:"Televisão contactada?",quem:"George - Walquiria",onde:"",quando:"",status:""},{item:"8",categoria:"COMUNICAÇÃO",descricao:"Definido quem dará as entrevistas?",quem:"George - Walquiria",onde:"",quando:"",status:""},{item:"9",categoria:"COMUNICAÇÃO",descricao:"Planejamento postagens do Instagram?",quem:"George - Walquiria",onde:"",quando:"",status:""},{item:"10",categoria:"IMPLANTAÇÃO",descricao:"Tenda Contratada?",quem:"Presidente",onde:"",quando:"",status:""},{item:"11",categoria:"IMPLANTAÇÃO",descricao:"Esquema de abastecimento de água definido?",quem:"A DEFINIR",onde:"",quando:"",status:""},{item:"12",categoria:"IMPLANTAÇÃO",descricao:"Abastecimento de Energia ok?",quem:"Joaquim",onde:"",quando:"",status:""},{item:"13",categoria:"IMPLANTAÇÃO",descricao:"Transporte Material do núcleo acertado?",quem:"Sr Raimundinho",onde:"",quando:"",status:""},{item:"14",categoria:"IMPLANTAÇÃO",descricao:"Aluguel de cadeiras e mesas definido?",quem:"Sr Raimundinho",onde:"",quando:"",status:""},{item:"15",categoria:"IMPLANTAÇÃO",descricao:"Uso de banheiros definido?",quem:"Galeria formosa",onde:"",quando:"",status:""},{item:"16",categoria:"IMPLANTAÇÃO",descricao:"Dinheiro trocado?",quem:"",onde:"",quando:"",status:""},{item:"17",categoria:"IMPLANTAÇÃO",descricao:"Fornecedor de bandecos definido?",quem:"",onde:"",quando:"",status:""},{item:"18",categoria:"IMPLANTAÇÃO",descricao:"Amarildo contactado?",quem:"",onde:"",quando:"",status:""},{item:"19",categoria:"IMPLANTAÇÃO",descricao:"Arte e Paisagem Contactada?",quem:"",onde:"",quando:"",status:""},{item:"20",categoria:"IMPLANTAÇÃO",descricao:"APP das plantas OK?",quem:"Pedro",onde:"",quando:"",status:""},{item:"21",categoria:"IMPLANTAÇÃO",descricao:"QR Code para acesso ao APP ok?",quem:"",onde:"",quando:"",status:""},{item:"22",categoria:"IMPLANTAÇÃO",descricao:"Material no núcleo checado e separado (CHECKLIST)",quem:"",onde:"",quando:"",status:""},{item:"23",categoria:"PESSOAL",descricao:"Escala dos irmãos definida?",quem:"",onde:"",quando:"",status:""},{item:"24",categoria:"PESSOAL",descricao:"Vigias e pessoal de limpeza contratados?",quem:"Joaquim",onde:"",quando:"",status:""},{item:"25",categoria:"PESSOAL",descricao:"Contratados definidos?",quem:"",onde:"",quando:"",status:""},{item:"26",categoria:"PESSOAL",descricao:"GO definido?",quem:"Marilsonn",onde:"",quando:"",status:""},{item:"27",categoria:"PESSOAL",descricao:"Instruções Dadas aos Irmãos",quem:"Presidente",onde:"",quando:"",status:""}]};
+
+const STORAGE_KEY = 'festivalData';
+const SCHEMA_VERSION = 3;
+
+// Copia do documento como veio do disco, tirada antes de qualquer renderizacao.
+// E ela que serve de molde ao salvar - o DOM ja renderizado nao serve.
+const MOLDE = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+let currentTab = 'plano';
+let openCategory = null;
+let editing = null;
+
+function esc(v) {
+  return String(v == null ? '' : v)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function itemsOf(tab) { return tab === 'plano' ? data.planoAcao : data.checklist; }
+function findItem(tab, id) { return itemsOf(tab).find(i => String(i.item) === String(id)); }
+function entry(tab, id) { return state[tab][String(id)]; }
+
+function seed(tab, item) {
+  return tab === 'plano'
+    ? { checked: false, quem: item.quem, onde: item.onde, quando: item.quando, status: item.status, observacoes: '' }
+    : { checked: false, observacoes: item.observacoes };
+}
+
+// Reconstroi o armazenamento a cada carga, preservando o que ja existe.
+// Versoes antigas guardavam booleanos e tinham menos itens - por isso a migracao.
+function estadoEmbutido() {
+  const el = document.getElementById('estadoSalvo');
+  if (!el) return null;
+  try { return JSON.parse(el.textContent); } catch (e) { return null; }
+}
+
+function loadState() {
+  let local = null;
+  try { local = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch (e) { local = null; }
+  const embutido = estadoEmbutido();
+
+  // Vence o mais recente: o arquivo salvo pode ter vindo de outro aparelho.
+  let raw = local;
+  if (embutido && (!local || (embutido.savedAt || 0) > (local.savedAt || 0))) raw = embutido;
+  if (!raw || typeof raw !== 'object') raw = {};
+
+  const next = { version: SCHEMA_VERSION, plano: {}, checklist: {} };
+  ['plano', 'checklist'].forEach(tab => {
+    const old = (raw[tab] && typeof raw[tab] === 'object') ? raw[tab] : {};
+    itemsOf(tab).forEach(item => {
+      const base = seed(tab, item);
+      const prev = old[String(item.item)];
+      if (typeof prev === 'boolean') base.checked = prev;
+      else if (prev && typeof prev === 'object') Object.assign(base, prev);
+      next[tab][String(item.item)] = base;
+    });
+  });
+  next.savedAt = raw.savedAt || 0;
+  return next;
+}
+
+let state = loadState();
+
+function save() {
+  state.savedAt = Date.now();
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+}
+
+function statsFor(tab, categoria) {
+  const items = itemsOf(tab).filter(i => !categoria || i.categoria === categoria);
+  const checked = items.filter(i => entry(tab, i.item).checked).length;
+  return {
+    checked: checked,
+    total: items.length,
+    pct: items.length ? Math.round(checked / items.length * 100) : 0
+  };
+}
+
+function categoriesOf(tab) {
+  const seen = [];
+  itemsOf(tab).forEach(i => { if (seen.indexOf(i.categoria) === -1) seen.push(i.categoria); });
+  return seen;
+}
+
+function renderTab(tab) {
+  const geral = statsFor(tab);
+  let html = '<div class="progress-card">'
+    + '<div style="font-size:12px;text-transform:uppercase;font-weight:600;opacity:.9;margin-bottom:8px">Progresso Geral</div>'
+    + '<div class="progress-card-number">' + geral.pct + '%</div>'
+    + '<div class="progress-card-bar"><div class="progress-card-fill" style="width:' + geral.pct + '%"></div></div>'
+    + '<div class="progress-card-label">' + geral.checked + ' de ' + geral.total + ' itens concluidos</div>'
+    + '</div><div class="dashboard-cards">';
+
+  categoriesOf(tab).forEach(cat => {
+    const s = statsFor(tab, cat);
+    const cor = s.pct === 100 ? '#4caf50' : '#ff9800';
+    html += '<div class="dashboard-card" onclick="openChecklistModal(\'' + esc(cat) + '\',\'' + tab + '\')">'
+      + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'
+      + '<div class="card-title" style="margin:0">' + esc(cat) + '</div>'
+      + '<div style="background:' + cor + ';color:#fff;padding:3px 8px;border-radius:12px;font-size:10px;font-weight:600">' + s.pct + '%</div>'
+      + '</div><div class="card-stats">'
+      + '<div class="stat-item"><div class="stat-number">' + s.checked + '</div><div class="stat-label">Concluidas</div></div>'
+      + '<div class="stat-item"><div class="stat-number">' + s.total + '</div><div class="stat-label">Total</div></div>'
+      + '<div class="stat-item"><div class="stat-number">' + s.pct + '%</div><div class="stat-label">Progresso</div></div>'
+      + '</div><div class="card-progress"><div class="card-progress-bar" style="width:' + s.pct + '%"></div></div></div>';
+  });
+
+  document.getElementById(tab === 'plano' ? 'planoContent' : 'checklistContent').innerHTML = html + '</div>';
+}
+
+function renderContent() { renderTab(currentTab); }
+
+function updateFooter() {
+  const s = statsFor(currentTab);
+  document.getElementById('statsText').textContent =
+    s.checked + ' de ' + s.total + ' concluido' + (s.total !== 1 ? 's' : '') + ' (' + s.pct + '%)';
+  document.getElementById('progressFill').style.width = s.pct + '%';
+}
+
+function renderCategoryList() {
+  if (!openCategory) return;
+  const tab = openCategory.tab;
+  let html = '<label style="font-weight:700;color:#1a5c8a;font-size:10px;text-transform:uppercase;margin-bottom:12px;display:block">'
+    + 'Toque no item para editar</label>';
+
+  itemsOf(tab).filter(i => i.categoria === openCategory.categoria).forEach(i => {
+    const marcado = entry(tab, i.item).checked;
+    html += '<div class="category-item-row' + (marcado ? ' completed' : '') + '"'
+      + ' onclick="openEditItem(\'' + tab + '\',\'' + i.item + '\')">'
+      + '<input type="checkbox" class="category-item-checkbox"' + (marcado ? ' checked' : '')
+      + ' onclick="event.stopPropagation()"'
+      + ' onchange="toggleItem(\'' + tab + '\',\'' + i.item + '\',this.checked)">'
+      + '<div class="category-item-text">' + esc(i.descricao) + '</div></div>';
+  });
+
+  document.getElementById('categoryModalItems').innerHTML = html;
+}
+
+function openChecklistModal(categoria, tab) {
+  openCategory = { categoria: categoria, tab: tab };
+  document.getElementById('categoryModalTitle').textContent = categoria;
+  renderCategoryList();
+  document.getElementById('categoryModal').classList.add('active');
+}
+
+function closeCategoryModal() {
+  openCategory = null;
+  document.getElementById('categoryModal').classList.remove('active');
+}
+
+function campo(rotulo, id, valor) {
+  return '<div class="modal-field"><label class="modal-label">' + rotulo + '</label>'
+    + '<input type="text" class="modal-input" id="' + id + '" value="' + esc(valor) + '"></div>';
+}
+
+function openEditItem(tab, id) {
+  const item = findItem(tab, id);
+  if (!item) return;
+  editing = { tab: tab, id: String(id) };
+  const e = entry(tab, id);
+
+  let html = '<div class="modal-field"><label class="modal-label">Descricao</label>'
+    + '<div class="item-description-full">' + esc(item.descricao) + '</div></div>'
+    + '<div class="modal-field"><label class="modal-label" style="display:flex;align-items:center;gap:6px;cursor:pointer">'
+    + '<input type="checkbox" id="checkCompleted" style="cursor:pointer"' + (e.checked ? ' checked' : '')
+    + ' onchange="toggleItem(\'' + tab + '\',\'' + id + '\',this.checked)">Marcar como concluido</label></div>';
+
+  if (tab === 'plano') {
+    html += campo('Responsavel', 'editQuem', e.quem)
+      + campo('Onde', 'editOnde', e.onde)
+      + campo('Quando', 'editQuando', e.quando)
+      + campo('Status', 'editStatus', e.status);
+  }
+
+  html += '<div class="modal-field"><label class="modal-label">Observacoes</label>'
+    + '<textarea class="modal-textarea" id="editObservacoes">' + esc(e.observacoes) + '</textarea></div>';
+
+  document.getElementById('editModalTitle').textContent = 'Item ' + item.item;
+  document.getElementById('editModalContent').innerHTML = html;
+  document.getElementById('editItemModal').classList.add('active');
+}
+
+function closeEditModal() {
+  editing = null;
+  document.getElementById('editItemModal').classList.remove('active');
+}
+
+// Marcar concluido nunca fecha o formulario aberto - so atualiza o que esta atras.
+function toggleItem(tab, id, checked) {
+  entry(tab, id).checked = checked;
+  save();
+  renderTab(tab);
+  updateFooter();
+  renderCategoryList();
+  const box = document.getElementById('checkCompleted');
+  if (editing && editing.id === String(id) && box) box.checked = checked;
+}
+
+function saveEditItem() {
+  if (!editing) return;
+  const e = entry(editing.tab, editing.id);
+  if (editing.tab === 'plano') {
+    e.quem = document.getElementById('editQuem').value;
+    e.onde = document.getElementById('editOnde').value;
+    e.quando = document.getElementById('editQuando').value;
+    e.status = document.getElementById('editStatus').value;
+  }
+  e.observacoes = document.getElementById('editObservacoes').value;
+  save();
+  closeEditModal();
+  renderContent();
+  updateFooter();
+  renderCategoryList();
+}
+
+function baixar(nome, conteudo, tipo) {
+  const url = URL.createObjectURL(new Blob([conteudo], { type: tipo }));
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = nome;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function aviso(texto) {
+  const el = document.getElementById('aviso');
+  if (!el) return;
+  el.textContent = texto;
+  clearTimeout(aviso._t);
+  aviso._t = setTimeout(() => { el.textContent = ''; }, 8000);
+}
+
+function hoje() {
+  const d = new Date();
+  const p = n => String(n).padStart(2, '0');
+  return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+}
+
+// --- CSV (separador ';' e BOM: e assim que o Excel pt-BR abre sem baguncar)
+function csvCampo(v) {
+  const s = String(v == null ? '' : v);
+  return /[";\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+
+function gerarCSV(tab) {
+  const cabecalho = tab === 'plano'
+    ? ['Item', 'Categoria', 'O Que', 'Responsavel', 'Onde', 'Quando', 'Status', 'Concluido', 'Observacoes']
+    : ['Item', 'Categoria', 'O Que', 'Concluido', 'Observacoes'];
+
+  const linhas = [cabecalho.join(';')];
+  itemsOf(tab).forEach(i => {
+    const e = entry(tab, i.item);
+    const cols = tab === 'plano'
+      ? [i.item, i.categoria, i.descricao, e.quem, e.onde, e.quando, e.status, e.checked ? 'Sim' : 'Nao', e.observacoes]
+      : [i.item, i.categoria, i.descricao, e.checked ? 'Sim' : 'Nao', e.observacoes];
+    linhas.push(cols.map(csvCampo).join(';'));
+  });
+
+  return '\ufeff' + linhas.join('\r\n');
+}
+
+function exportarCSV(tab) {
+  const nome = (tab === 'plano' ? 'Plano de Acao' : 'Checklist') + ' - FFH 2026 - ' + hoje() + '.csv';
+  baixar(nome, gerarCSV(tab), 'text/csv;charset=utf-8');
+  aviso('CSV gerado: ' + nome);
+}
+
+// --- Salvar o proprio HTML com os dados dentro
+// As tags ficam partidas de proposito: assim o texto integral so existe
+// no documento de verdade, e a busca abaixo nunca acha a si mesma.
+const ABRE = '<' + 'script type="application/json" id="estadoSalvo">';
+const FECHA = '<' + '/script>';
+
+function gerarHTML() {
+  const ini = MOLDE.indexOf(ABRE);
+  if (ini === -1) return null;
+  const fim = MOLDE.indexOf(FECHA, ini);
+  if (fim === -1) return null;
+  // '<' escapado para o JSON jamais fechar a tag por acidente
+  const json = JSON.stringify(state).replace(/</g, '\\u003c');
+  return MOLDE.slice(0, ini + ABRE.length) + json + MOLDE.slice(fim);
+}
+
+function salvarNoArquivo() {
+  const html = gerarHTML();
+  if (!html) { aviso('Nao foi possivel gerar o arquivo.'); return; }
+  const nome = 'FFH 2026 - ' + hoje() + '.html';
+  baixar(nome, html, 'text/html;charset=utf-8');
+  aviso('Baixado "' + nome + '" com os dados dentro. Guarde-o no lugar do app.html para levar o preenchimento para outro aparelho.');
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    currentTab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(currentTab).classList.add('active');
+    renderContent();
+    updateFooter();
+  });
+});
+
+document.getElementById('categoryModal').addEventListener('click', e => {
+  if (e.target.id === 'categoryModal') closeCategoryModal();
+});
+document.getElementById('editItemModal').addEventListener('click', e => {
+  if (e.target.id === 'editItemModal') closeEditModal();
+});
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if (editing) closeEditModal();
+  else closeCategoryModal();
+});
+
+save();
+renderContent();
+updateFooter();
+
+    </script>
+</body>
+</html>
