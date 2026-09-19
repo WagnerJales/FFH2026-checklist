@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(awk 'NR==555' app.html)",
+      "Bash(python -c ' *)",
+      "Bash(node --check check.js)",
+      "Bash(python feat.py)",
+      "Bash(vercel --version)",
+      "Bash(npm --version)",
+      "Bash(git --version)",
+      "Bash(git init *)",
+      "Bash(git config *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(mkdir -p public)",
+      "Bash(cp app.html public/index.html)",
+      "Bash(vercel --prod --confirm)"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "Festival de Flores - Holambra",
+  "public": true,
+  "buildCommand": "",
+  "outputDirectory": "public",
+  "env": [],
+  "devCommand": "",
+  "framework": null
+}
